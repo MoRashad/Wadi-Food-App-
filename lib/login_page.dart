@@ -1,4 +1,5 @@
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'auth.dart';
@@ -27,10 +28,69 @@ class LoginPageState extends State<LoginPage>{
   String _email;
   String _password;
   TextEditingController _passcontroller;
-  String _confirmpassword;
   String _name;
   String _error;
+  String phoneNo;
+  String _confirmpassword;
   FormType _formType = FormType.login;
+  String smsCode;
+  String verificationId;
+
+  Future<void> verifyPhone() async {
+    final PhoneCodeAutoRetrievalTimeout autoRetrieve = (String verId) {
+      print('Inside autoRetrieve');
+      this.verificationId = verId;
+    };
+
+    final PhoneCodeSent smsCodeSent = (String verId, [int forceCodeResent]) {
+      this.verificationId = verId;
+      smsCodeDialog(context).then((user) {
+        print('Signed in');
+      });
+    };
+
+    final PhoneVerificationCompleted verificationSuccess = (AuthCredential phoneAuthCredential) {
+      print('Verified');
+    };
+
+    final PhoneVerificationFailed verificationFail = (Exception e) {
+      print('Inside Verification fail');
+      print(e);
+    };
+
+    await FirebaseAuth.instance.verifyPhoneNumber(
+        phoneNumber: this.phoneNo,
+        codeAutoRetrievalTimeout: autoRetrieve,
+        codeSent: smsCodeSent,
+        timeout: const Duration(seconds: 5),
+        verificationCompleted: verificationSuccess,
+        verificationFailed: verificationFail);
+  }
+
+   Future<bool> smsCodeDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return new AlertDialog(
+            title: new Text('Enter sms code'),
+            content: new TextField(
+              onChanged: (value) {
+                this.smsCode = value;
+              },
+            ),
+            contentPadding: EdgeInsets.all(10.0),
+            actions: <Widget>[
+              new FlatButton(
+                child: Text('Done'),
+                onPressed: validateandsubmit,
+              )
+            ],
+          );
+        });
+  }
+
+
   bool validateandsave(){
 
     final form = forekey.currentState;
@@ -51,7 +111,7 @@ void validateandsubmit() async {
       print('signed in: $userid');
       widget.onsignedin();
       }else if(_formType == FormType.register){
-        String userid = await widget.auth.createuserwithemailandpassword(_email, _password, _name);
+        String userid = await widget.auth.createuserwithemailandpassword(_email, _password, _name,phoneNo );
         print('register user: $userid');
         widget.onsignedin();
       }
@@ -227,33 +287,43 @@ void movetoresetpassword(){
       )
     ];
     }else if(_formType == FormType.register){
-      return[
-       TextFormField(
-        decoration: new InputDecoration(
-        labelText: 'confirm Password',
-       ),
-         obscureText: true,
-         validator: (value) { 
-           if(value.isEmpty){
-             return "Field can\'t be empty";
-           }
-           if(value != _password){
-             return "Passwords don\'t match";
-           }
-           return null;
-         },
-        onChanged: (value)  => _confirmpassword = value,
-      ), 
-       SizedBox(height: 20,),
-       Text('Full Name'),
-       TextFormField(
-        decoration: new InputDecoration(
-        labelText: 'Full Name',
-        ),
-        validator: (value) => value.trim().isEmpty ? 'Name can\'t be empty' : null,
-        onChanged: (value)  => _name = value,
+            return[
+             SizedBox(height: 20,),
+             Text('Confirm Password'),
+             TextFormField(
+              decoration: new InputDecoration(
+              labelText: 'confirm Password',
+             ),
+               obscureText: true,
+               validator: (value) { 
+                 if(value.isEmpty){
+                   return "Field can\'t be empty";
+                 }
+                 if(value != _password){
+                   return "Passwords don\'t match";
+                 }
+                 return null;
+               },
+              onChanged: (value)  => _confirmpassword = value,
+            ), 
+             SizedBox(height: 20,),
+             Text('Full Name'),
+             TextFormField(
+              decoration: new InputDecoration(
+              labelText: 'Full Name',
+              ),
+              validator: (value) => value.trim().isEmpty ? 'Name can\'t be empty' : null,
+              onChanged: (value)  => _name = value,
+            ),
+            SizedBox(height: 20.0),
+            Text('phone number'),
+            TextFormField(
+              decoration: InputDecoration(
+                labelText: 'phone number',
+              ),
+              validator: (value) => value.isEmpty ? 'phone number can\'t be empty' : null,
+              onChanged: (value) => this.phoneNo = value,
       ),
-      SizedBox(height: 20.0),
       new RaisedButton(
         color: Colors.green,
         child: Text('create an account',
@@ -261,7 +331,7 @@ void movetoresetpassword(){
          fontSize: 20,
         ),
         ),
-        onPressed: validateandsubmit,
+        onPressed: verifyPhone, //validateandsubmit,
       ),
       new FlatButton(
         child: new Text('Have an account? login',

@@ -4,7 +4,7 @@ import 'login_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 abstract class BaseAuth {
   Future<String> signinwithemailandpassword(String email, String password);
-  Future<String> createuserwithemailandpassword(String email, String password, String name);
+  Future<String> createuserwithemailandpassword(String email, String password, String name,String phoneNo);
   Future<String> currentuser();
   Future sendresetpassword(String email);
   Future<void> signout();
@@ -20,14 +20,14 @@ class Auth implements BaseAuth{
     
   }
 
-  Future<String> createuserwithemailandpassword(String email, String password, String name) async{
+  Future<String> createuserwithemailandpassword(String email, String password, String name, String phoneNo) async{
     AuthResult result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
     FirebaseUser user = result.user;
         if(user != null){
       _firestore.collection('/users').document(user.uid).setData({
         'email' : email,
         'name': name,
-        'phonenumber': 312321321,
+        'phonenumber': phoneNo,
         'profileimage': "",
         'uid': user.uid
         
@@ -41,9 +41,11 @@ class Auth implements BaseAuth{
     FirebaseUser user = await _auth.currentUser();
     return user.uid;
   }
+
   Future sendresetpassword(String email) async {
     return _auth.sendPasswordResetEmail(email: email);
   }
+
   Future<void> signout() async{
     return _auth.signOut();
   }

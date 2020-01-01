@@ -16,6 +16,8 @@ class HomePage extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
+    //final _firestore = Firestore.instance;
+    //FirebaseUser user = FirebaseAuth.instance.currentUser() as FirebaseUser;
     return Scaffold(
       appBar: AppBar(
         title: Text('welcome'),
