@@ -16,14 +16,18 @@ class LoginPage extends StatefulWidget {
 
 enum FormType{
   login,
-  register
+  register,
+  reset
 }
+
 
 class LoginPageState extends State<LoginPage>{
   final _db = Firestore.instance;
   final forekey = new GlobalKey<FormState>();
   String _email;
   String _password;
+  TextEditingController _passcontroller;
+  String _confirmpassword;
   String _name;
   String _error;
   FormType _formType = FormType.login;
@@ -45,12 +49,20 @@ void validateandsubmit() async {
       //FirebaseUser user = (await _auth.signInWithEmailAndPassword(email: _email, password: _password)).user;      
       String userid = await widget.auth.signinwithemailandpassword(_email, _password);
       print('signed in: $userid');
-
-      }else{
+      widget.onsignedin();
+      }else if(_formType == FormType.register){
         String userid = await widget.auth.createuserwithemailandpassword(_email, _password, _name);
         print('register user: $userid');
+        widget.onsignedin();
       }
-      widget.onsignedin();
+      
+      if(_formType == FormType.reset){
+        widget.auth.sendresetpassword(_email);
+        setState(() {
+          _formType = FormType.login;
+        });
+      }
+      
     }catch(e){
       setState(() {
         _error = e.message;
@@ -74,6 +86,12 @@ void moveToLogin(){
   });
 
 }
+void movetoresetpassword(){
+  forekey.currentState.reset();
+  setState(() {
+    _formType = FormType.reset;
+  });
+}
 
   @override
   Widget build(BuildContext context) {
@@ -83,18 +101,20 @@ void moveToLogin(){
         title: new Text('login'),
         elevation: 0.0,
       ),
-      body:  new Container(
+      body:SingleChildScrollView( 
+       child: Container(
           padding: EdgeInsets.all(20),
           child: new Form(
             key: forekey,
             child: new Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: showAlert() + buildInputs() + buildsubmitbutton(),
             ),
           ),
         ),
-      );
+      ),
+    );
   }
 
    List<Widget> showAlert(){
@@ -111,37 +131,75 @@ void moveToLogin(){
             ),
           ],
         ),
-      )];
+      ),
+      SizedBox(height: 30,),
+      ];
     }
     return [SizedBox(height: 0,)];
   }
 
   List<Widget> buildInputs(){
-    return [
-      new TextFormField(
-        keyboardType: TextInputType.emailAddress,
-        decoration: new InputDecoration(
-        labelText: 'Email',
-        ),
-        validator: emailvalidate.validate, 
-        onChanged: (value)  => _email = value,
-      ),
-      SizedBox(height: 30),
-      new TextFormField(
+        if(_formType == FormType.login || _formType == FormType.register)
+        {
+        return [
+           Text('Email'), 
+           TextFormField(
+            keyboardType: TextInputType.emailAddress,
+            decoration: new InputDecoration(
+            labelText: 'Email',
+            ),
+            validator: (value){
+              if(value.isEmpty){
+                return "email can't be empty";
+              }
+                return null;
+            }, 
+            onChanged: (value)  => _email = value,
+          ),
+          SizedBox(height: 30),
+          Text('Password'), 
+          new TextFormField(
+            controller: _passcontroller,
         decoration: new InputDecoration(
         labelText: 'Password',
        ),
          obscureText: true,
-         validator: passwordvalidate.validate, /*(value) => value.isEmpty ? 'Password can\'t be empty' : null,*/
+         validator: (value) {
+           if(value.isEmpty){
+            return "password can't be empty";
+          }
+          if(value.length < 6){
+            return "Password can't be less than 6 charaters";
+          }
+            return null;
+         },
+        
         onChanged: (value)  => _password = value,
       ),    
     ];
+    }else{
+      return[
+        Text('Email'),
+        TextFormField(
+            keyboardType: TextInputType.emailAddress,
+            decoration: new InputDecoration(
+            labelText: 'Email',
+            ),
+            validator: (value){
+              if(value.isEmpty){
+                return "email can't be empty";
+              }
+                return null;
+            }, 
+            onChanged: (value)  => _email = value,
+        ),
+      ];
+    }
   }
   List<Widget> buildsubmitbutton(){
     if(_formType == FormType.login){
 
     return[    
-      SizedBox(height: 30,),
       new RaisedButton(
         color: Colors.green,
         child: Text('Login',
@@ -159,10 +217,36 @@ void moveToLogin(){
         ),
         onPressed: moveToRegister,
       ),
+      FlatButton(
+        child: Text('forgot password?',
+        style: TextStyle(
+          fontSize: 17,
+        ),
+        ),
+        onPressed: movetoresetpassword,
+      )
     ];
-    }else{
+    }else if(_formType == FormType.register){
       return[
-      new TextFormField(
+       TextFormField(
+        decoration: new InputDecoration(
+        labelText: 'confirm Password',
+       ),
+         obscureText: true,
+         validator: (value) { 
+           if(value.isEmpty){
+             return "Field can\'t be empty";
+           }
+           if(value != _password){
+             return "Passwords don\'t match";
+           }
+           return null;
+         },
+        onChanged: (value)  => _confirmpassword = value,
+      ), 
+       SizedBox(height: 20,),
+       Text('Full Name'),
+       TextFormField(
         decoration: new InputDecoration(
         labelText: 'Full Name',
         ),
@@ -181,6 +265,27 @@ void moveToLogin(){
       ),
       new FlatButton(
         child: new Text('Have an account? login',
+         style: new TextStyle(
+         fontSize: 20,
+        ),
+        ),
+        onPressed: moveToLogin,
+      ),
+      ];
+    }else if(_formType == FormType.reset){
+      return[
+        SizedBox(height: 20.0),
+       RaisedButton(
+        color: Colors.green,
+        child: Text('send reset mail',
+         style: new TextStyle(
+         fontSize: 20,
+        ),
+        ),
+        onPressed: validateandsubmit,
+      ),
+      new FlatButton(
+        child: new Text('Back to login',
          style: new TextStyle(
          fontSize: 20,
         ),

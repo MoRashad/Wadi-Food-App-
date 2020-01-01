@@ -6,6 +6,7 @@ abstract class BaseAuth {
   Future<String> signinwithemailandpassword(String email, String password);
   Future<String> createuserwithemailandpassword(String email, String password, String name);
   Future<String> currentuser();
+  Future sendresetpassword(String email);
   Future<void> signout();
 }
 
@@ -26,6 +27,10 @@ class Auth implements BaseAuth{
       _firestore.collection('/users').document(user.uid).setData({
         'email' : email,
         'name': name,
+        'phonenumber': 312321321,
+        'profileimage': "",
+        'uid': user.uid
+        
 
     });
     }
@@ -36,29 +41,14 @@ class Auth implements BaseAuth{
     FirebaseUser user = await _auth.currentUser();
     return user.uid;
   }
-
+  Future sendresetpassword(String email) async {
+    return _auth.sendPasswordResetEmail(email: email);
+  }
   Future<void> signout() async{
     return _auth.signOut();
   }
 
+
+
 }
 
-class emailvalidate{
-  static String validate(String value){
-    if(value.isEmpty){
-      return "email can't be empty";
-    }
-    return null;
-  }
-}
-class passwordvalidate{
-  static String validate(String value){
-    if(value.isEmpty){
-      return "password can't be empty";
-    }
-    if(value.length < 6){
-      return "email can't be less than 6 charaters";
-    }
-    return null;
-  }
-}
