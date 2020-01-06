@@ -5,12 +5,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'auth.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
-
-
 class LoginPage extends StatefulWidget {
-  final BaseAuth auth;  
-  LoginPage({this.auth, this.onsignedin});
-  final VoidCallback onsignedin;
+  final String userid;
+   LoginPage({this.onSignedIn, this.userid});
+  final VoidCallback onSignedIn;
+  static final String id = 'Login_Page';
   @override
   State<StatefulWidget> createState() => new LoginPageState();
 }
@@ -20,7 +19,6 @@ enum FormType{
   register,
   reset
 }
-
 
 class LoginPageState extends State<LoginPage>{
   final _db = Firestore.instance;
@@ -36,7 +34,7 @@ class LoginPageState extends State<LoginPage>{
   String smsCode;
   String verificationId;
 
-  Future<void> verifyPhone() async {
+  /*Future<void> verifyPhone() async {
     final PhoneCodeAutoRetrievalTimeout autoRetrieve = (String verId) {
       print('Inside autoRetrieve');
       this.verificationId = verId;
@@ -88,7 +86,7 @@ class LoginPageState extends State<LoginPage>{
             ],
           );
         });
-  }
+  }*/
 
 
   bool validateandsave(){
@@ -106,18 +104,11 @@ void validateandsubmit() async {
     try{
       if(_formType == FormType.login){
 
-      //FirebaseUser user = (await _auth.signInWithEmailAndPassword(email: _email, password: _password)).user;      
-      String userid = await widget.auth.signinwithemailandpassword(_email, _password);
-      print('signed in: $userid');
-      widget.onsignedin();
+      AuthService.signinwithemailandpassword( _email, _password);
       }else if(_formType == FormType.register){
-        String userid = await widget.auth.createuserwithemailandpassword(_email, _password, _name,phoneNo );
-        print('register user: $userid');
-        widget.onsignedin();
-      }
-      
-      if(_formType == FormType.reset){
-        widget.auth.sendresetpassword(_email);
+        AuthService.createuserwithemailandpassword(context, _email, _password, _name, phoneNo);
+      }else if(_formType == FormType.reset){
+        AuthService.sendresetpassword(_email);
         setState(() {
           _formType = FormType.login;
         });
@@ -331,7 +322,7 @@ void movetoresetpassword(){
          fontSize: 20,
         ),
         ),
-        onPressed: verifyPhone, //validateandsubmit,
+        onPressed: validateandsubmit,//verifyPhone, 
       ),
       new FlatButton(
         child: new Text('Have an account? login',
