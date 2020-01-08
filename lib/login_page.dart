@@ -34,7 +34,7 @@ class LoginPageState extends State<LoginPage>{
   String smsCode;
   String verificationId;
 
-  /*Future<void> verifyPhone() async {
+  Future<void> verifyPhone() async {
     final PhoneCodeAutoRetrievalTimeout autoRetrieve = (String verId) {
       print('Inside autoRetrieve');
       this.verificationId = verId;
@@ -86,7 +86,7 @@ class LoginPageState extends State<LoginPage>{
             ],
           );
         });
-  }*/
+  }
 
 
   bool validateandsave(){
@@ -322,7 +322,7 @@ void movetoresetpassword(){
          fontSize: 20,
         ),
         ),
-        onPressed: validateandsubmit,//verifyPhone, 
+        onPressed: verifyPhone, 
       ),
       new FlatButton(
         child: new Text('Have an account? login',

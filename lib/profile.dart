@@ -1,8 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'edit_profile.dart';
-import 'constants.dart';
 import 'user_model.dart';
 class ProfilePage extends StatefulWidget {
   final String userid;
@@ -11,15 +10,7 @@ class ProfilePage extends StatefulWidget {
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
-String mCurrentUser;
-FirebaseAuth _auth;
 
-getCurrentUser () async {
-  mCurrentUser = await _auth.currentUser().then((user){
-    mCurrentUser = user.uid;
-    return mCurrentUser;
-  });
-}
 class _ProfilePageState extends State<ProfilePage>{
   @override
   Widget build(BuildContext context) {
@@ -29,7 +20,7 @@ class _ProfilePageState extends State<ProfilePage>{
 
       ),
       body: FutureBuilder(
-        future: userRef.document(widget.userid).get(),
+        future:  Firestore.instance.collection('users').document(widget.userid).get(),
         builder: (BuildContext context, AsyncSnapshot snapshot){
         if(!snapshot.hasData){
           return Center(child: CircularProgressIndicator(),
