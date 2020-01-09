@@ -35,10 +35,8 @@ class HomePage extends StatelessWidget {
               title: Center(child: Text('Profile')),
               trailing: Icon(Icons.portrait),
               onTap: () {
-                
                 Navigator.of(context).pop();
                 Navigator.of(context).pushNamed(ProfilePage.id);
-                
               }, 
             ),
             ListTile(

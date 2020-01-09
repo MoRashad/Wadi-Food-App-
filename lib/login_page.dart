@@ -54,13 +54,14 @@ class LoginPageState extends State<LoginPage>{
     final PhoneVerificationFailed verificationFail = (Exception e) {
       print('Inside Verification fail');
       print(e);
+      _error = e.toString();
     };
 
     await FirebaseAuth.instance.verifyPhoneNumber(
         phoneNumber: this.phoneNo,
         codeAutoRetrievalTimeout: autoRetrieve,
         codeSent: smsCodeSent,
-        timeout: const Duration(seconds: 5),
+        timeout: const Duration(seconds: 10),
         verificationCompleted: verificationSuccess,
         verificationFailed: verificationFail);
   }

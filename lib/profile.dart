@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'edit_profile.dart';
+import 'postphoto.dart';
 import 'user_model.dart';
 class ProfilePage extends StatefulWidget {
   final String userid;
@@ -77,12 +78,27 @@ class _ProfilePageState extends State<ProfilePage>{
                       ),
                     ),
                   ),
+                  Divider(
+                    color: Colors.black,
+                    thickness: 1,
+                    endIndent: 60,
+                    indent: 60,
+                  ),
                 ],
               ),
             ],
           ),
         );
         },
+      ),
+      floatingActionButton: 
+      FloatingActionButton(
+        onPressed: (){
+          Navigator.of(context).pushNamed(PostPhoto.id);
+          print('post photo');
+        },
+        child: Icon(Icons.add),
+        backgroundColor: Colors.green,
       ),
     );
   }

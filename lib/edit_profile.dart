@@ -1,8 +1,10 @@
 import 'dart:io';
-
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:login_demo1/storage_service.dart';
 import 'database_service.dart';
+import 'storage_service.dart';
 import 'user_model.dart';
 
 class EditProfile extends StatefulWidget {
@@ -35,16 +37,32 @@ class _EditProfileState extends State<EditProfile> {
       });
     }
   }
-
-  _submit(){
+  _displayprofileimage(){
+    if(_profileimage == null){
+      if(widget.user.profileimage.isEmpty){
+        return AssetImage('assets/images/user_placeholder.jpg');
+      }
+      else{
+        return CachedNetworkImageProvider(widget.user.profileimage);
+      }
+    }else{
+        return FileImage(_profileimage);
+      }
+  }
+  _submit() async {
     if(_formkey.currentState.validate()){
       _formkey.currentState.save();
-      String _profileimage = '';
+      String _profileimageUrl = '';
+      if(_profileimage == null){
+        _profileimageUrl = widget.user.profileimage;
+      }else{
+        _profileimageUrl = await StorageService.uploadUserProfileImage(widget.user.profileimage, _profileimage);
+      }
       User user = User(
         id: widget.user.id,
         name: _name,
         email: _email,
-        profileimage: _profileimage,
+        profileimage: _profileimageUrl,
         phonenumber: _phonenummber,
       );
       DatabaseServise.updateUser(user);
@@ -71,7 +89,8 @@ class _EditProfileState extends State<EditProfile> {
                   children: <Widget>[
                     CircleAvatar(
                       radius: 55,
-                      backgroundImage: NetworkImage(''),
+                      backgroundColor: Colors.grey,
+                      backgroundImage: _displayprofileimage(),
                     ),
                     FlatButton(
                       onPressed: _handleImageFromGallery,

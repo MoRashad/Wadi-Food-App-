@@ -2,11 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:login_demo1/edit_profile.dart';
 import 'package:login_demo1/exercise.dart';
+import 'package:login_demo1/postphoto.dart';
 import 'package:login_demo1/profile.dart';
 import 'Home_page.dart';
 import 'login_page.dart';
-import 'package:provider/provider.dart';
-
 void main() {
 
 runApp(MyApp());
@@ -14,7 +13,7 @@ runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget { 
-  String userdata;
+ String userdata;
   Widget _getScreenId(){
      return StreamBuilder<FirebaseUser>(
       stream: FirebaseAuth.instance.onAuthStateChanged,
@@ -25,7 +24,7 @@ class MyApp extends StatelessWidget {
           }else{
             return LoginPage();
           }
-        },
+     },
     );
   }
   @override
@@ -44,6 +43,7 @@ class MyApp extends StatelessWidget {
             ProfilePage.id : (context)=> ProfilePage(userid: userdata),
             EditProfile.id : (context)=> EditProfile(userid: userdata,),
             ExersiceCalPage.id : (context)=> ExersiceCalPage(),
+            PostPhoto.id : (context)=> PostPhoto(userid: userdata),
       },
     );
   }
