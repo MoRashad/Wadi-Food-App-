@@ -34,7 +34,7 @@ class LoginPageState extends State<LoginPage>{
   String smsCode;
   String verificationId;
 
-  Future<void> verifyPhone() async {
+  /*Future<void> verifyPhone() async {
     final PhoneCodeAutoRetrievalTimeout autoRetrieve = (String verId) {
       print('Inside autoRetrieve');
       this.verificationId = verId;
@@ -42,9 +42,13 @@ class LoginPageState extends State<LoginPage>{
 
     final PhoneCodeSent smsCodeSent = (String verId, [int forceCodeResent]) {
       this.verificationId = verId;
+      if(this.verificationId == forceCodeResent.toString()){
       smsCodeDialog(context).then((user) {
         print('Signed in');
       });
+      }else{
+        print('wrong code');
+      }
     };
 
     final PhoneVerificationCompleted verificationSuccess = (AuthCredential phoneAuthCredential) {
@@ -61,7 +65,7 @@ class LoginPageState extends State<LoginPage>{
         phoneNumber: this.phoneNo,
         codeAutoRetrievalTimeout: autoRetrieve,
         codeSent: smsCodeSent,
-        timeout: const Duration(seconds: 10),
+        timeout: const Duration(seconds: 30),
         verificationCompleted: verificationSuccess,
         verificationFailed: verificationFail);
   }
@@ -82,12 +86,15 @@ class LoginPageState extends State<LoginPage>{
             actions: <Widget>[
               new FlatButton(
                 child: Text('Done'),
-                onPressed: validateandsubmit,
+                onPressed: (){
+                  Navigator.pop(context);
+                  validateandsubmit();
+                }
               )
             ],
           );
         });
-  }
+  }*/
 
 
   bool validateandsave(){
@@ -102,25 +109,23 @@ class LoginPageState extends State<LoginPage>{
   }
 void validateandsubmit() async {
   if(validateandsave()){
-    try{
+    
       if(_formType == FormType.login){
 
-      AuthService.signinwithemailandpassword( _email, _password);
+      try{AuthService.signinwithemailandpassword( _email, _password, _error);
+      print(_error);
+      }catch(e){
+        print(e);
+      }
       }else if(_formType == FormType.register){
-        AuthService.createuserwithemailandpassword(context, _email, _password, _name, phoneNo);
+        AuthService.createuserwithemailandpassword(context, _email, _password, _name, phoneNo, _error);
       }else if(_formType == FormType.reset){
         AuthService.sendresetpassword(_email);
         setState(() {
           _formType = FormType.login;
         });
       }
-      
-    }catch(e){
-      setState(() {
-        _error = e.message;
-      });
-      print('error: $e');
-    }
+    
   }
 }
 
@@ -323,7 +328,7 @@ void movetoresetpassword(){
          fontSize: 20,
         ),
         ),
-        onPressed: verifyPhone, 
+        onPressed: validateandsubmit, //verifyPhone, 
       ),
       new FlatButton(
         child: new Text('Have an account? login',

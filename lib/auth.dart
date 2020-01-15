@@ -12,7 +12,7 @@ class AuthService {
     return _auth.onAuthStateChanged.map((FirebaseUser user)=> user?.uid);
 
   }*/
-  static void signinwithemailandpassword(String email, String password) async{
+  static void signinwithemailandpassword(String email, String password, String error) async{
      try{
        AuthResult result = await _auth.signInWithEmailAndPassword(email: email, password: password);
       FirebaseUser user = result.user;
@@ -21,13 +21,14 @@ class AuthService {
         print(user.uid);
       }
      }catch(e){
-       print(e);
+       print(e.message);
+        return error = e.message;
      }
 
     
   }
 
-  static void createuserwithemailandpassword(BuildContext context,String email, String password, String name, String phoneNo) async{
+  static void createuserwithemailandpassword(BuildContext context,String email, String password, String name, String phoneNo, String _error) async{
     AuthResult result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
     FirebaseUser user = result.user;
         try{if(user != null){
@@ -38,10 +39,10 @@ class AuthService {
         'profileimage': "",
         'uid': user.uid
     });
-      //Navigator.pushReplacementNamed(context, HomePage.id);
       print(user.uid);
     }}catch(e){
-      print('error: $e');
+      print(e.message);
+       _error = e.message;
     }
   }
 
