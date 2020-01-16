@@ -1,4 +1,6 @@
 
+import 'dart:math';
+import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -27,7 +29,7 @@ class LoginPageState extends State<LoginPage>{
   String _password;
   TextEditingController _passcontroller;
   String _name;
-  String _error;
+  String error;
   String phoneNo;
   String _confirmpassword;
   FormType _formType = FormType.login;
@@ -111,14 +113,13 @@ void validateandsubmit() async {
   if(validateandsave()){
     
       if(_formType == FormType.login){
-
-      try{AuthService.signinwithemailandpassword( _email, _password, _error);
-      print(_error);
-      }catch(e){
-        print(e);
-      }
+        AuthService.signinwithemailandpassword( _email, _password);
+        if(AuthService.error != null){
+          print(AuthService.error);
+          //AuthService.error = null;
+        }
       }else if(_formType == FormType.register){
-        AuthService.createuserwithemailandpassword(context, _email, _password, _name, phoneNo, _error);
+        AuthService.createuserwithemailandpassword(context, _email, _password, _name, phoneNo);
       }else if(_formType == FormType.reset){
         AuthService.sendresetpassword(_email);
         setState(() {
@@ -175,7 +176,7 @@ void movetoresetpassword(){
   }
 
    List<Widget> showAlert(){
-    if(_error != null){
+    if(AuthService.error != null){
       return [Container(
         color: Colors.amberAccent,
         width: double.infinity,
@@ -184,14 +185,26 @@ void movetoresetpassword(){
           children: <Widget>[
             Icon(Icons.error_outline),
             Expanded(
-              child: AutoSizeText(_error, maxLines: 3, ),
+              child: AutoSizeText(AuthService.error, maxLines: 3, ),
             ),
+             Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: IconButton(
+                icon: Icon(Icons.close),
+                onPressed: () {
+                  setState(() {
+                    AuthService.error = null;
+                  });
+                },
+              ),
+             ),
           ],
         ),
       ),
       SizedBox(height: 30,),
       ];
     }
+    AuthService.error = null;
     return [SizedBox(height: 0,)];
   }
 
@@ -206,7 +219,7 @@ void movetoresetpassword(){
             labelText: 'Email',
             ),
             validator: (value){
-              if(value.isEmpty){
+              if(value.trim().isEmpty){
                 return "email can't be empty";
               }
                 return null;
@@ -246,7 +259,7 @@ void movetoresetpassword(){
               if(value.isEmpty){
                 return "email can't be empty";
               }
-                return null;
+              return null;
             }, 
             onChanged: (value)  => _email = value,
         ),

@@ -8,11 +8,10 @@ import 'package:flutter/material.dart';
 class AuthService {
   static final _auth = FirebaseAuth.instance;
   static final _firestore = Firestore.instance;
-  /*Stream<String> get onAuthStateChanged {
-    return _auth.onAuthStateChanged.map((FirebaseUser user)=> user?.uid);
+  static String error;
 
-  }*/
-  static void signinwithemailandpassword(String email, String password, String error) async{
+ 
+  static void signinwithemailandpassword(String email, String password) async{
      try{
        AuthResult result = await _auth.signInWithEmailAndPassword(email: email, password: password);
       FirebaseUser user = result.user;
@@ -21,14 +20,16 @@ class AuthService {
         print(user.uid);
       }
      }catch(e){
-       print(e.message);
-        return error = e.message;
+       error = e.message;
+       //return error;
+       print(error);
+        
      }
 
     
   }
 
-  static void createuserwithemailandpassword(BuildContext context,String email, String password, String name, String phoneNo, String _error) async{
+  static void createuserwithemailandpassword(BuildContext context,String email, String password, String name, String phoneNo) async{
     AuthResult result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
     FirebaseUser user = result.user;
         try{if(user != null){
@@ -42,7 +43,7 @@ class AuthService {
       print(user.uid);
     }}catch(e){
       print(e.message);
-       _error = e.message;
+      error = e.message;
     }
   }
 

@@ -1,32 +1,77 @@
 {
-    "project_info": {
-        "project_number": "105039943495",
-        "firebase_url": "https://login-de86d.firebaseio.com",
-        "project_id": "login-de86d",
-        "storage_bucket": "login-de86d.appspot.com"
-    },
-    "client": [{
-        "client_info": {
-            "mobilesdk_app_id": "1:105039943495:android:4e2944f0091cebb309de62",
-            "android_client_info": {
-                "package_name": "com.example.login_demo1"
-            }
-        },
-        "oauth_client": [{
-            "client_id": "105039943495-a5m77nm4r9nqkeus1n8hnlv8uj5mth4n.apps.googleusercontent.com",
-            "client_type": 3
-        }],
-        "api_key": [{
-            "current_key": "AIzaSyBXq0jWzCkOF8lPghoQV6HR3uaCUJNT6qY"
-        }],
-        "services": {
-            "appinvite_service": {
-                "other_platform_oauth_client": [{
-                    "client_id": "105039943495-a5m77nm4r9nqkeus1n8hnlv8uj5mth4n.apps.googleusercontent.com",
-                    "client_type": 3
-                }]
-            }
+  "project_info": {
+    "project_number": "105039943495",
+    "firebase_url": "https://login-de86d.firebaseio.com",
+    "project_id": "login-de86d",
+    "storage_bucket": "login-de86d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:105039943495:android:ec7a32842e67f0c709de62",
+        "android_client_info": {
+          "package_name": "com.example.WadiFood"
         }
-    }],
-    "configuration_version": "1"
+      },
+      "oauth_client": [
+        {
+          "client_id": "105039943495-a5m77nm4r9nqkeus1n8hnlv8uj5mth4n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXq0jWzCkOF8lPghoQV6HR3uaCUJNT6qY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "105039943495-a5m77nm4r9nqkeus1n8hnlv8uj5mth4n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:105039943495:android:4e2944f0091cebb309de62",
+        "android_client_info": {
+          "package_name": "com.example.login_demo1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "105039943495-ba5h4t9qt397lnre488pm6ogj1ds9qc8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.login_demo1",
+            "certificate_hash": "0503ad55d331392b8718a39b71b7254dd3ea3430"
+          }
+        },
+        {
+          "client_id": "105039943495-a5m77nm4r9nqkeus1n8hnlv8uj5mth4n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXq0jWzCkOF8lPghoQV6HR3uaCUJNT6qY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "105039943495-a5m77nm4r9nqkeus1n8hnlv8uj5mth4n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
 }

@@ -12,6 +12,7 @@ class DatabaseServise{
       'profileimage': user.profileimage,
     });
   }
+
   static void createpost(Post post){
     Firestore.instance.collection('posts').document(post.authorid).collection('usersposts').add({
       'imageurl': post.imageurl,
@@ -21,4 +22,11 @@ class DatabaseServise{
       'timestamp': post.timestamp,
     });
   }
+
+  static Future<QuerySnapshot> searchusers(String name){
+    Future<QuerySnapshot> users = Firestore.instance.collection('users').where('name', isGreaterThanOrEqualTo: name).getDocuments();
+    return users;
+
+  }
+  
 }

@@ -1,19 +1,17 @@
 
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:login_demo1/database_service.dart';
-import 'package:login_demo1/storage_service.dart';
-
+import 'database_service.dart';
+import 'storage_service.dart';
 import 'post_model.dart';
 
 class PostPhoto extends StatefulWidget {
   final String userid;
-  PostPhoto({this.userid});
+  PostPhoto({this.userid, Post post});
   static final String id = 'postphoto';
   @override
   _PostPhotoState createState() => _PostPhotoState();
@@ -140,7 +138,10 @@ _submit() async{
         title: Text('Post A Photo'),
         actions: <Widget>[
           IconButton(
-            onPressed: _submit,
+            onPressed: (){
+              _submit();
+              Navigator.pop(context);
+            },
             icon: Icon(Icons.add),
           ),
         ],

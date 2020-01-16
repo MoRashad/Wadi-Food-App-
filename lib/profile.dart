@@ -1,7 +1,9 @@
+import 'package:WadiFood/search_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'edit_profile.dart';
+import 'post_model.dart';
 import 'postphoto.dart';
 import 'user_model.dart';
 class ProfilePage extends StatefulWidget {
@@ -13,12 +15,24 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage>{
+  bool isfollowing = false;
+  int followercount = 0;
+  int followingcount = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('profile'),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(
+              Icons.search,
+            ),
+            onPressed:()=> Navigator.of(context).pushNamed(SearchPage.id),
 
+          ),
+        ],
       ),
       body: FutureBuilder(
         future:  Firestore.instance.collection('users').document(widget.userid).get(),
@@ -86,6 +100,7 @@ class _ProfilePageState extends State<ProfilePage>{
                   ),
                 ],
               ),
+              
             ],
           ),
         );
@@ -102,4 +117,5 @@ class _ProfilePageState extends State<ProfilePage>{
       ),
     );
   }
+
 }
