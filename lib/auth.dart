@@ -4,6 +4,8 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'user_data.dart';
 
 class AuthService {
   static final _auth = FirebaseAuth.instance;
@@ -18,6 +20,7 @@ class AuthService {
       if(user != null){
         //Navigator.pushReplacementNamed(context, HomePage.id);
         print(user.uid);
+        
       }
      }catch(e){
        error = e.message;
@@ -40,7 +43,7 @@ class AuthService {
         'profileimage': "",
         'uid': user.uid
     });
-      print(user.uid);
+      Provider.of<Userdata>(context).currentuserid = user.uid;
     }}catch(e){
       print(e.message);
       error = e.message;

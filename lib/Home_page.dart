@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'profile.dart';
 import 'auth.dart';
+import 'user_data.dart';
 
 class HomePage extends StatelessWidget {
   
-  final String userid; 
-  HomePage({this.userid});
+ // final String userid; 
+  //HomePage({this.userid});
   static final String id = 'home_page';
 
   @override

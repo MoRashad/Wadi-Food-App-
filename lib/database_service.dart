@@ -28,5 +28,65 @@ class DatabaseServise{
     return users;
 
   }
-  
+  static void followuser(String currentuser, String userid){
+    Firestore.instance.collection('following')
+    .document(currentuser)
+    .collection('userfollowing')
+    .document(userid)
+    .setData({});
+
+    Firestore.instance.collection('followers')
+    .document(userid)
+    .collection('userfollowers')
+    .document(currentuser)
+    .setData({});
+  }
+
+  static void unfollowuser(String currentuser, String userid){
+    Firestore.instance.collection('following')
+    .document(currentuser)
+    .collection('userfollowing')
+    .document(userid)
+    .get().then((doc){
+      if(doc.exists){
+        doc.reference.delete();
+      }
+    });
+
+    Firestore.instance.collection('followers')
+    .document(userid)
+    .collection('userfollowers')
+    .document(currentuser)
+    .get().then((doc){
+      if(doc.exists){
+        doc.reference.delete();
+      }
+    });
+  }
+
+  static Future<bool> isfollowinguser(String currentuser, String userid) async {
+    DocumentSnapshot followingdoc = await Firestore.instance.collection('followers')
+    .document(userid)
+    .collection('userfollowers')
+    .document(currentuser)
+    .get();
+    return followingdoc.exists;
+  }
+
+  static Future<int> numfollowing(String userid) async{
+    QuerySnapshot followingsnapshot = await Firestore.instance.collection('following')
+    .document(userid)
+    .collection('userfollowing')
+    .getDocuments();
+    return followingsnapshot.documents.length;
+
+  }
+
+  static Future<int> numfollowers(String userid) async{
+    QuerySnapshot followersnapshot = await Firestore.instance.collection('followers')
+    .document(userid)
+    .collection('userfollowers')
+    .getDocuments();
+    return followersnapshot.documents.length;
+  }
 }

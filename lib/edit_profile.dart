@@ -21,6 +21,8 @@ class _EditProfileState extends State<EditProfile> {
   String _name;
   String _email;
   String _phonenummber;
+  bool _isLoading = false;
+
   void initState(){
     super.initState();
     _name = widget.user.name;
@@ -49,8 +51,11 @@ class _EditProfileState extends State<EditProfile> {
       }
   }
   _submit() async {
-    if(_formkey.currentState.validate()){
+    if(_formkey.currentState.validate() && !_isLoading){
       _formkey.currentState.save();
+      setState(() {
+        _isLoading = true;
+      });
       String _profileimageUrl = '';
       if(_profileimage == null){
         _profileimageUrl = widget.user.profileimage;
@@ -76,103 +81,114 @@ class _EditProfileState extends State<EditProfile> {
         backgroundColor: Colors.white,
         title: Text('Edit Profile'),
       ),
-      body: SingleChildScrollView(
-        child: Center(
-          child: Container(
-            height: MediaQuery.of(context).size.height,
-            child: Form(
-              key: _formkey,
-              child: Padding(
-                padding: const EdgeInsets.all(30.0),
-                child: Column(
-                  children: <Widget>[
-                    CircleAvatar(
-                      radius: 55,
-                      backgroundColor: Colors.grey,
-                      backgroundImage: _displayprofileimage(),
-                    ),
-                    FlatButton(
-                      onPressed: _handleImageFromGallery,
-                      child: Text('Change Profile Picture', 
-                      style: TextStyle(
-                        fontSize: 15,
+      body: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: ListView(
+          children: <Widget>[
+            _isLoading 
+            ? LinearProgressIndicator(
+              backgroundColor: Colors.blue[200],
+              valueColor: AlwaysStoppedAnimation(Colors.blue)
+            )
+            : SizedBox.shrink(),
+            Center(
+            child: Container(
+              height: MediaQuery.of(context).size.height,
+              child: Form(
+                key: _formkey,
+                child: Padding(
+                  padding: const EdgeInsets.all(30.0),
+                  child: Column(
+                    children: <Widget>[
+                      CircleAvatar(
+                        radius: 55,
+                        backgroundColor: Colors.grey,
+                        backgroundImage: _displayprofileimage(),
                       ),
+                      FlatButton(
+                        onPressed: _handleImageFromGallery,
+                        child: Text('Change Profile Picture', 
+                        style: TextStyle(
+                          fontSize: 15,
+                        ),
+                        ),
                       ),
-                    ),
-                    TextFormField(
-                      initialValue: _name,
-                      style: TextStyle(
-                        fontSize: 18,
+                      TextFormField(
+                        initialValue: _name,
+                        style: TextStyle(
+                          fontSize: 18,
+                        ),
+                        decoration: InputDecoration(
+                          icon: Icon(Icons.person,size: 20,),
+                          labelText:'Name', 
+                        ),
+                        validator: (value){
+                          if(value.trim().length<2){
+                            return 'Enter A valid Name';
+                          }
+                          return null;
+                        },
+                        onSaved: (value){
+                          _name = value;
+                        },
                       ),
-                      decoration: InputDecoration(
-                        icon: Icon(Icons.person,size: 20,),
-                        labelText:'Name', 
+                      TextFormField(
+                        initialValue: _email,
+                        style: TextStyle(
+                          fontSize: 18,
+                        ),
+                        decoration: InputDecoration(
+                          icon: Icon(Icons.email,size: 20,),
+                          labelText:'Email', 
+                        ),
+                        validator: (value){
+                          if(value.isEmpty){
+                            return 'Email Can\'t be empty';
+                          }
+                          return null;
+                        },
+                        onSaved: (value){
+                          _email = value;
+                        },
                       ),
-                      validator: (value){
-                        if(value.trim().length<2){
-                          return 'Enter A valid Name';
-                        }
-                        return null;
-                      },
-                      onSaved: (value){
-                        _name = value;
-                      },
-                    ),
-                    TextFormField(
-                      initialValue: _email,
-                      style: TextStyle(
-                        fontSize: 18,
-                      ),
-                      decoration: InputDecoration(
-                        icon: Icon(Icons.email,size: 20,),
-                        labelText:'Email', 
-                      ),
-                      validator: (value){
-                        if(value.isEmpty){
-                          return 'Email Can\'t be empty';
-                        }
-                        return null;
-                      },
-                      onSaved: (value){
-                        _email = value;
-                      },
-                    ),
-                    TextFormField(
-                      initialValue: _phonenummber,
-                      style: TextStyle(
-                        fontSize: 18,
-                      ),
+                      TextFormField(
+                        initialValue: _phonenummber,
+                        style: TextStyle(
+                          fontSize: 18,
+                        ),
 
-                      decoration: InputDecoration(
-                        icon: Icon(Icons.phone,size: 20,),
-                        labelText:'Phone Number', 
+                        decoration: InputDecoration(
+                          icon: Icon(Icons.phone,size: 20,),
+                          labelText:'Phone Number', 
+                        ),
+                        validator: (value){
+                          if(value.isEmpty){
+                            return 'Field can\'t be empty';
+                          }
+                          return null;
+                        },
+                        onSaved: (value){
+                          _phonenummber = value;
+                        },
                       ),
-                      validator: (value){
-                        if(value.isEmpty){
-                          return 'Field can\'t be empty';
-                        }
-                        return null;
-                      },
-                      onSaved: (value){
-                        _phonenummber = value;
-                      },
-                    ),
-                    Container(
-                      margin: EdgeInsets.all(40),
-                      height: 40,
-                      width: 250,
-                      child: FlatButton(
-                        onPressed: _submit,
-                        color: Colors.green,
-                        child: Text('Save Changes',
-                        style: TextStyle(fontSize: 16),),
+                      Container(
+                        margin: EdgeInsets.all(40),
+                        height: 40,
+                        width: 250,
+                        child: FlatButton(
+                          onPressed: _submit,
+                          color: Colors.green,
+                          child: Text('Save Changes',
+                          style: TextStyle(fontSize: 16),),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
+           ),
+         ],
         ),
       ),
     );

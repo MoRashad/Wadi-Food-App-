@@ -1,8 +1,11 @@
-import 'package:WadiFood/database_service.dart';
-import 'package:WadiFood/profile.dart';
+import 'package:provider/provider.dart';
+
+import 'database_service.dart';
+import 'profile.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'user_data.dart';
 import 'user_model.dart';
 
 class SearchPage extends StatefulWidget {
@@ -28,7 +31,9 @@ class _SearchPageState extends State<SearchPage> {
       title: Text(user.name),
       onTap: ()=> Navigator.push(
         context,
-        MaterialPageRoute(builder: (_)=> ProfilePage(userid: user.id,))   
+        MaterialPageRoute(builder: (_)=> ProfilePage(
+          userid: user.id, 
+          currentuser: Provider.of<Userdata>(context).currentuserid,))   
       ),
     );
   }
