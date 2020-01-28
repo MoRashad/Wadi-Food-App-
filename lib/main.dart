@@ -1,3 +1,4 @@
+import 'package:WadiFood/feed_page.dart';
 import 'package:provider/provider.dart';
 import 'search_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -50,6 +51,7 @@ class MyApp extends StatelessWidget {
           ExersiceCalPage.id : (context)=> ExersiceCalPage(),
           PostPhoto.id : (context)=> PostPhoto(userid: Provider.of<Userdata>(context).currentuserid),
           SearchPage.id : (context)=> SearchPage(userid: Provider.of<Userdata>(context).currentuserid,),
+          FeedPage.id : (context)=> FeedPage(currentuserid: Provider.of<Userdata>(context).currentuserid,),
   },
   ),
     );

@@ -90,5 +90,32 @@ class DatabaseServise{
     return followersnapshot.documents.length;
   }
 
-  
+  static Future<List<Post>> getfeedposts (String userid) async{
+    QuerySnapshot feedsnapshot = await Firestore.instance.collection('feeds')
+      .document(userid)
+      .collection('userfeed')
+      .orderBy('timestamp', descending: true)
+      .getDocuments();
+    List<Post> posts = feedsnapshot.documents.map((doc) => Post.fromDoc(doc)).toList();
+    return posts;
+  }
+
+  static Future<List<Post>> getuserposts(String userid) async{
+    QuerySnapshot userpostsnapshot = await Firestore.instance.collection('posts')
+      .document(userid)
+      .collection('usersposts')
+      .orderBy('timestamp', descending: true)
+      .getDocuments();
+    List<Post> posts = userpostsnapshot.documents.map((doc) => Post.fromDoc(doc)).toList();
+    return posts;
+  }
+
+  static Future<User> getuserwithid(String userid) async{
+    DocumentSnapshot userdocsnapshot = await Firestore.instance.collection('users')
+      .document(userid).get();
+    if(userdocsnapshot.exists){
+      return User.fromDoc(userdocsnapshot);
+    }
+    return User();
+  }
 }
