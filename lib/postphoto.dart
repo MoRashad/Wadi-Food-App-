@@ -114,7 +114,7 @@ _submit() async{
     Post post = Post(
       imageurl: imageurl,
       description: _caption,
-      likes: {},
+      likecount: 0,
       authorid: widget.userid,
       timestamp: Timestamp.fromDate(DateTime.now())
     );

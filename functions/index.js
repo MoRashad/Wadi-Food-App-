@@ -61,3 +61,27 @@ exports.onUploadPost = functions.firestore
                 .set(snapshot.data());
         });
     });
+
+exports.onUpdatePost = functions.firestore
+    .document('/posts/{userid}/usersposts/{postid}')
+    .onUpdate(async(snapshot, context) => {
+        const userid = context.params.userid;
+        const postid = context.params.postid;
+        const newpostdata = snapshot.after.data();
+        console.log(newpostdata);
+        const userfollowerref = admin.firestore()
+            .collection('followers')
+            .doc(userid)
+            .collection('userfollowers');
+        const userfollowersnapshot = await userfollowerref.get();
+        userfollowersnapshot.forEach(async userdoc => {
+            const postref = admin.firestore()
+                .collection('feeds')
+                .doc(userdoc.id)
+                .collection('userfeed');
+            const postdoc = await postref.doc(postid).get();
+            if (postdoc.exists) {
+                postdoc.ref.update(newpostdata);
+            }
+        });
+    });

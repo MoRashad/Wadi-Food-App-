@@ -17,7 +17,7 @@ class DatabaseServise{
     Firestore.instance.collection('posts').document(post.authorid).collection('usersposts').add({
       'imageurl': post.imageurl,
       'description': post.description,
-      'like': post.likes,
+      'likecount': post.likecount,
       'authorid': post.authorid,
       'timestamp': post.timestamp,
     });
@@ -117,5 +117,60 @@ class DatabaseServise{
       return User.fromDoc(userdocsnapshot);
     }
     return User();
+  }
+
+  static void likepost ({String currentuserid, Post post}) {
+    DocumentReference postref = Firestore.instance.collection('posts')
+      .document(post.authorid)
+      .collection('usersposts')
+      .document(post.id);
+      postref.get().then((doc) {
+        int likecount = doc.data['likecount'];
+        postref.updateData({'likecount': likecount +1});
+        Firestore.instance.collection('likes')
+          .document(post.id)
+          .collection('postlikes')
+          .document(currentuserid)
+          .setData({});
+      });
+  }
+
+  static void unlikepost ({String currentuserid, Post post}){
+    DocumentReference postref = Firestore.instance.collection('posts')
+      .document(post.authorid)
+      .collection('usersposts')
+      .document(post.id);
+      postref.get().then((doc) {
+        int likecount = doc.data['likecount'];
+        postref.updateData({'likecount': likecount -1});
+        Firestore.instance.collection('likes')
+          .document(post.id)
+          .collection('postlikes')
+          .document(currentuserid)
+          .get()
+          .then((doc){
+            if(doc.exists){
+              doc.reference.delete();
+            }
+          });
+      });
+  }
+
+  static Future<bool> didlikepost({String currentuserid, Post post}) async{
+    DocumentSnapshot userdoc = await Firestore.instance.collection('likes')
+      .document(post.id)
+      .collection('postlikes')
+      .document(currentuserid)
+      .get();
+    return userdoc.exists;
+  }
+
+  static void commentonpost({String currentuserid, String postid, String comment}){
+    Firestore.instance.collection('comments').document(postid).collection('postcomments').add({
+      'content': comment,
+      'authorid': currentuserid,
+      'timestamp': Timestamp.fromDate(DateTime.now()),
+    });
+    
   }
 }

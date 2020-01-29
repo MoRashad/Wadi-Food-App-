@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'comment_page.dart';
 import 'edit_profile.dart';
 import 'post_model.dart';
 import 'postphoto.dart';
@@ -225,9 +226,20 @@ class _ProfilePageState extends State<ProfilePage>{
   }
   _buildtilepost(Post post) {
     return GridTile(
-      child: Image(
-        image: CachedNetworkImageProvider(post.imageurl),
-        fit: BoxFit.cover,
+      child: GestureDetector(
+        onTap: () => Navigator.push(
+          context,
+            MaterialPageRoute(
+              builder: (_) => CommentsPage(
+                postid: post.id,
+                likecount: post.likecount,
+              ),
+            )
+        ),
+          child: Image(
+          image: CachedNetworkImageProvider(post.imageurl),
+          fit: BoxFit.cover,
+        ),
       ),
     );
   }

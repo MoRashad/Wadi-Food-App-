@@ -1,3 +1,8 @@
+import 'dart:async';
+
+import 'package:WadiFood/comment_page.dart';
+import 'package:WadiFood/database_service.dart';
+import 'package:animator/animator.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
@@ -5,12 +10,75 @@ import 'post_model.dart';
 import 'profile.dart';
 import 'user_model.dart';
 
-class PostView extends StatelessWidget {
+class PostView extends StatefulWidget {
 
   final String currentuserid;
   final Post post;
   final User author;
   PostView({this.currentuserid, this.post, this.author});
+
+  @override
+  _PostViewState createState() => _PostViewState();
+}
+
+class _PostViewState extends State<PostView> {
+  int _likecount = 0;
+  bool _isliked = false;
+  bool _heartanim = false;
+  @override
+  void initState(){
+    super.initState();
+    _likecount = widget.post.likecount;
+    _initpostliked();
+  }
+
+  @override
+  void didUpdateWidget (PostView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if(oldWidget.post.likecount != widget.post.likecount){
+      _likecount = widget.post.likecount;
+    }
+  }
+
+  _initpostliked() async{
+    bool isliked = await DatabaseServise.didlikepost(
+      currentuserid: widget.currentuserid,
+      post: widget.post
+    );
+    if(mounted){
+      setState(() {
+        _isliked = isliked;
+      });
+    }
+  }
+
+  _likepost(){
+    if(_isliked){
+      DatabaseServise.unlikepost(
+        currentuserid: widget.currentuserid,
+        post: widget.post
+      );
+      setState(() {
+        _isliked = false;
+        _likecount = _likecount - 1;
+      });
+    }else{
+      DatabaseServise.likepost(
+        currentuserid: widget.currentuserid,
+        post: widget.post
+      );
+      setState(() {
+        _heartanim = true;
+        _isliked = true;
+        _likecount = _likecount + 1;
+      });
+      Timer(Duration(milliseconds: 350), (){
+        setState(() {
+          _heartanim = false;
+        });
+      });
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -20,8 +88,8 @@ class PostView extends StatelessWidget {
             context,
             MaterialPageRoute(
               builder: (_) => ProfilePage(
-                currentuser: currentuserid,
-                userid: post.authorid,
+                currentuser: widget.currentuserid,
+                userid: widget.post.authorid,
               ),
             ),
           ),
@@ -32,12 +100,12 @@ class PostView extends StatelessWidget {
                 CircleAvatar(
                   radius: 25,
                   backgroundColor: Colors.grey,
-                  backgroundImage: author.profileimage.isEmpty
+                  backgroundImage: widget.author.profileimage.isEmpty
                   ? AssetImage('assets/images/user_placeholder')
-                  : CachedNetworkImageProvider(author.profileimage),
+                  : CachedNetworkImageProvider(widget.author.profileimage),
                 ),
                 SizedBox(width: 8,),
-                Text(author.name,
+                Text(widget.author.name,
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
@@ -47,13 +115,34 @@ class PostView extends StatelessWidget {
             ),
           ),
         ),
-        Container(
-          height: MediaQuery.of(context).size.width,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: CachedNetworkImageProvider(post.imageurl),
-              fit: BoxFit.cover,
+        GestureDetector(
+            onDoubleTap: _likepost,
+            child: Stack(
+            alignment: Alignment.center,
+            children: <Widget>[
+             Container(
+              height: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: CachedNetworkImageProvider(widget.post.imageurl),
+                  fit: BoxFit.cover,
+                ),
+              ),
             ),
+            _heartanim ? Animator(
+              duration: Duration(milliseconds: 300),
+              tween: Tween(begin: 0.5, end: 1.4),
+              curve: Curves.elasticOut,
+              builder: (anim)=> Transform.scale(
+                scale: anim.value,
+                child: Icon(Icons.favorite,
+                size: 100,
+                color: Colors.red[400],
+                ),
+              ),
+            )
+            : SizedBox.shrink(),
+            ],
           ),
         ),
         Padding(
@@ -64,20 +153,32 @@ class PostView extends StatelessWidget {
               Row(
                 children: <Widget>[
                   IconButton(
-                    icon: Icon(Icons.favorite_border),
+                    icon: _isliked 
+                    ? Icon(Icons.favorite,
+                    color: Colors.red,
+                    )
+                    : Icon(Icons.favorite_border),
                     iconSize: 30,
-                    onPressed: (){},
+                    onPressed: _likepost,
                   ),
                   IconButton(
                     icon: Icon(Icons.comment),
                     iconSize: 30,
-                    onPressed: (){},
+                    onPressed: () => Navigator.push(
+                      context,
+                       MaterialPageRoute(
+                         builder: (_) => CommentsPage(
+                           postid: widget.post.id,
+                           likecount: _likecount,
+                         ),
+                       )
+                    ),
                   ),
                 ],
               ),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 12),
-                child: Text('0 Likes',
+                child: Text('${_likecount.toString()} Likes',
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -90,7 +191,7 @@ class PostView extends StatelessWidget {
                   Container(
                     margin: EdgeInsets.only(left: 12, right: 6),
                     child: Text(
-                      author.name,
+                      widget.author.name,
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
