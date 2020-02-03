@@ -285,25 +285,28 @@ class _ProfilePageState extends State<ProfilePage>{
           ),
         ],
       ),
-      body: FutureBuilder(
-        future:  Firestore.instance.collection('users').document(widget.userid).get(),
-        builder: (BuildContext context, AsyncSnapshot snapshot){
-        if(!snapshot.hasData){
-          return Center(child: CircularProgressIndicator(),
+      body: RefreshIndicator(
+        onRefresh: () => _setupposts(),
+          child: FutureBuilder(
+          future:  Firestore.instance.collection('users').document(widget.userid).get(),
+          builder: (BuildContext context, AsyncSnapshot snapshot){
+          if(!snapshot.hasData){
+            return Center(child: CircularProgressIndicator(),
+            );
+          }
+          User user = User.fromDoc(snapshot.data);
+          return Center(
+            child: ListView(
+              children: <Widget>[
+                _buildprofileinfo(user),
+                _buildtogglebuttons(),
+                Divider(),
+                _builddisplayposts(),
+              ],
+            ),
           );
-        }
-        User user = User.fromDoc(snapshot.data);
-        return Center(
-          child: ListView(
-            children: <Widget>[
-              _buildprofileinfo(user),
-              _buildtogglebuttons(),
-              Divider(),
-              _builddisplayposts(),
-            ],
-          ),
-        );
-        },
+          },
+        ),
       ),
       floatingActionButton: 
       FloatingActionButton(

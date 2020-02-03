@@ -1,5 +1,4 @@
 import 'package:provider/provider.dart';
-
 import 'database_service.dart';
 import 'profile.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -20,29 +19,35 @@ class _SearchPageState extends State<SearchPage> {
   TextEditingController _searchcontroller = TextEditingController();
   Future<QuerySnapshot> _users;
 
-  _buildertile(User user){
+  _buildertile(User user) {
     return ListTile(
       leading: CircleAvatar(
         radius: 20,
         backgroundImage: user.profileimage.isEmpty
-        ? AssetImage('assets/images/user_placeholder.jpg')
-        : CachedNetworkImageProvider(user.profileimage),
+            ? AssetImage('assets/images/user_placeholder.jpg')
+            : CachedNetworkImageProvider(user.profileimage),
       ),
       title: Text(user.name),
-      onTap: ()=> Navigator.push(
+      onTap: () => Navigator.push(
         context,
-        MaterialPageRoute(builder: (_)=> ProfilePage(
-          userid: user.id, 
-          currentuser: Provider.of<Userdata>(context).currentuserid,))   
+        MaterialPageRoute(
+          builder: (_) => ProfilePage(
+            userid: user.id,
+            currentuser: Provider.of<Userdata>(context).currentuserid,
+          ),
+        ),
       ),
     );
   }
-  _clearsearch(){
-    WidgetsBinding.instance.addPostFrameCallback((_) => _searchcontroller.clear());
+
+  _clearsearch() {
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => _searchcontroller.clear());
     setState(() {
       _users = null;
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,7 +63,8 @@ class _SearchPageState extends State<SearchPage> {
               Icons.search,
               color: Colors.black,
               size: 30,
-            ),suffixIcon: IconButton(
+            ),
+            suffixIcon: IconButton(
               icon: Icon(
                 Icons.clear,
                 color: Colors.black,
@@ -67,8 +73,8 @@ class _SearchPageState extends State<SearchPage> {
             ),
             filled: true,
           ),
-          onSubmitted: (value){
-            if(value.isNotEmpty){  
+          onSubmitted: (value) {
+            if (value.isNotEmpty) {
               setState(() {
                 _users = DatabaseServise.searchusers(value);
               });
@@ -77,29 +83,31 @@ class _SearchPageState extends State<SearchPage> {
         ),
       ),
       body: _users == null
-      ? Center(child: Text('Search for a user'),)
-      : FutureBuilder(
-        future: _users,
-        builder: (context, snapshot){
-          if(!snapshot.hasData){
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-          if(snapshot.data.documents.length == 0){
-            return Center(
-              child: Text('No Users Found'),
-            );
-          }
-          return ListView.builder(
-            itemCount: snapshot.data.documents.length,
-            itemBuilder: (BuildContext context, int index){
-              User user = User.fromDoc(snapshot.data.documents[index]);
-              return _buildertile(user);
-            },
-          );
-        },
-      ),
+          ? Center(
+              child: Text('Search for a user'),
+            )
+          : FutureBuilder(
+              future: _users,
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+                if (snapshot.data.documents.length == 0) {
+                  return Center(
+                    child: Text('No Users Found'),
+                  );
+                }
+                return ListView.builder(
+                  itemCount: snapshot.data.documents.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    User user = User.fromDoc(snapshot.data.documents[index]);
+                    return _buildertile(user);
+                  },
+                );
+              },
+            ),
     );
   }
 }

@@ -1,6 +1,8 @@
+import 'package:WadiFood/exercise.dart';
 import 'package:WadiFood/feed_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'calorie_cal.dart';
 import 'profile.dart';
 import 'auth.dart';
 import 'user_data.dart';
@@ -36,7 +38,6 @@ class HomePage extends StatelessWidget {
           children: <Widget>[
             ListTile(
               title: Center(child: Text('Profile')),
-              trailing: Icon(Icons.portrait),
               onTap: () {
                 Navigator.of(context).pop();
                 Navigator.of(context).pushNamed(ProfilePage.id);
@@ -44,7 +45,6 @@ class HomePage extends StatelessWidget {
             ),
             ListTile(
               title: Center(child: Text('Feed')),
-              trailing: Icon(Icons.home),
               onTap: () {
                 Navigator.of(context).pop();
                 Navigator.of(context).pushNamed(FeedPage.id);
@@ -57,18 +57,24 @@ class HomePage extends StatelessWidget {
             ),
             ListTile(
               title: Center(child: Text('Exercise Calculator')),
-              trailing: Icon(Icons.system_update_alt),
+              onTap: (){
+                Navigator.of(context).pop();
+                Navigator.of(context).pushNamed(ExersiceCalPage.id);
+              },
             ),
             ListTile(
               title: Center(child: Text('Calorie Calculator')),
-              trailing: Icon(Icons.portrait),
+              onTap: (){
+                Navigator.of(context).pop();
+                Navigator.of(context).pushNamed(CalorieCalPage.id);
+              },
             ),
           ],
         ),
       ),
       body: Container(
         child: Center(
-          child: Text('wlecome', style: TextStyle(fontSize: 32.0),),
+          child: Text('welcome', style: TextStyle(fontSize: 32.0),),
         ),
       ),
     );
