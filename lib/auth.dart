@@ -13,7 +13,7 @@ class AuthService {
   static String error;
 
  
-  static void signinwithemailandpassword(String email, String password) async{
+  static void signinwithemailandpassword(BuildContext context, String email, String password) async{
      try{
        AuthResult result = await _auth.signInWithEmailAndPassword(email: email, password: password);
       FirebaseUser user = result.user;
@@ -23,12 +23,10 @@ class AuthService {
         
       }
      }catch(e){
-       error = e.message;
-       //return error;
-       print(error);
-        
+       print(e.message);
+       //return e.message;
+       
      }
-
     
   }
 

@@ -4,8 +4,11 @@ import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:provider/provider.dart';
 import 'auth.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+
+import 'user_data.dart';
 
 class LoginPage extends StatefulWidget {
   final String userid;
@@ -111,21 +114,21 @@ class LoginPageState extends State<LoginPage>{
   }
 void validateandsubmit() async {
   if(validateandsave()){
-    
-      if(_formType == FormType.login){
-        AuthService.signinwithemailandpassword( _email, _password);
-        if(AuthService.error != null){
+    if(_formType == FormType.login){
+      AuthService.signinwithemailandpassword( context,_email, _password);
+      if(AuthService.error != null){
           print(AuthService.error);
           //AuthService.error = null;
         }
-      }else if(_formType == FormType.register){
-        AuthService.createuserwithemailandpassword(context, _email, _password, _name, phoneNo);
-      }else if(_formType == FormType.reset){
-        AuthService.sendresetpassword(_email);
-        setState(() {
-          _formType = FormType.login;
-        });
-      }
+      
+    }else if(_formType == FormType.register){
+      AuthService.createuserwithemailandpassword(context, _email, _password, _name, phoneNo);
+    }else if(_formType == FormType.reset){
+      AuthService.sendresetpassword(_email);
+      setState(() {
+        _formType = FormType.login;
+      });
+    }
     
   }
 }
@@ -176,7 +179,7 @@ void movetoresetpassword(){
   }
 
    List<Widget> showAlert(){
-    if(AuthService.error != null){
+    /*if(Provider.of<Userdata>(context).currentuserid == null){
       return [Container(
         color: Colors.amberAccent,
         width: double.infinity,
@@ -205,7 +208,7 @@ void movetoresetpassword(){
       ];
     }
     AuthService.error = null;
-    return [SizedBox(height: 0,)];
+    return [SizedBox(height: 0,)];*/
   }
 
   List<Widget> buildInputs(){
@@ -224,7 +227,7 @@ void movetoresetpassword(){
               }
                 return null;
             }, 
-            onChanged: (value)  => _email = value,
+            onChanged: (value)  => _email = value.trim(),
           ),
           SizedBox(height: 30),
           Text('Password'), 

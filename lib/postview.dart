@@ -200,7 +200,7 @@ class _PostViewState extends State<PostView> {
                   ),
                   Expanded(
                     child: Text(
-                      ' ',//post.description,
+                      '',//widget.post.description,
                       style: TextStyle(
                         fontSize: 16,
                       ),

@@ -1,8 +1,5 @@
 import 'package:WadiFood/postview.dart';
-import 'package:WadiFood/profile.dart';
-
 import 'database_service.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'post_model.dart';
 import 'user_model.dart';
