@@ -134,7 +134,10 @@ _submit() async{
     final height = MediaQuery.of(context).size.width;
     final width = MediaQuery.of(context).size.width;
     return Scaffold(
+      backgroundColor: Colors.green,
       appBar: AppBar(
+        backgroundColor: Colors.green,
+        elevation: 0,
         title: Text('Post A Photo'),
         actions: <Widget>[
           IconButton(
@@ -167,7 +170,7 @@ _submit() async{
                   child: Container(
                     height: height,
                     width: width,
-                    color: Colors.grey[300],
+                    color: Colors.green,
                     child: _image == null 
                     ? Icon(Icons.add_a_photo,
                       color: Colors.white,

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 class ExersiceCalPage extends StatefulWidget {
   static final String id = 'Exersice_cal';
-  final String userid;
+  final String userid;  
   ExersiceCalPage({this.userid});
   @override
   _ExersiceCalPageState createState() => _ExersiceCalPageState();
@@ -17,7 +17,12 @@ class _ExersiceCalPageState extends State<ExersiceCalPage> {
   String stoptimetodisplay = '00:00:00';
   var swatch = Stopwatch();
   final duration = const Duration(seconds: 1);
-
+  int countertime = 0;
+  double energyexpenture = (0.0175 * 3.5 * 81) / 60;
+  double calpersec = 0;
+  List<String> exercises = ['Walking', 'Running'];
+  String selectedexercise;
+  
   void starttimer(){
     Timer(duration, keeprunning);
   }
@@ -29,6 +34,9 @@ class _ExersiceCalPageState extends State<ExersiceCalPage> {
                           + (swatch.elapsed.inMinutes %60).toString().padLeft(2, '0') + ':'
                           + (swatch.elapsed.inSeconds %60).toString().padLeft(2, '0');
       });
+      countertime = swatch.elapsed.inSeconds;
+      calpersec += energyexpenture;
+      print(countertime); 
     }
   }
   void startstopwatch(){
@@ -53,6 +61,7 @@ class _ExersiceCalPageState extends State<ExersiceCalPage> {
     });
     swatch.reset();
     stoptimetodisplay = '00:00:00';
+    calpersec = 0;
   }
   @override
   Widget build(BuildContext context) {
@@ -78,6 +87,22 @@ class _ExersiceCalPageState extends State<ExersiceCalPage> {
               ),
             ),
             color: Colors.green,
+          ),
+          DropdownButton(
+            hint: Text('Choose an exercise'), // Not necessary for Option 1
+            value: selectedexercise,
+            onChanged: (newValue) {
+              setState(() {
+                selectedexercise = newValue;
+                print(selectedexercise);
+              });
+            },
+            items: exercises.map((location) {
+              return DropdownMenuItem(
+                child: new Text(location),
+                value: location,
+              );
+            }).toList(),
           ),
           SizedBox(height: 40,),
           Container(
@@ -111,7 +136,7 @@ class _ExersiceCalPageState extends State<ExersiceCalPage> {
           Expanded(
             flex: 6,
             child: Container(
-              child: Text('0',
+              child: Text(calpersec.toStringAsFixed(0),
               style: TextStyle(
                 fontSize: 30,
                 fontWeight: FontWeight.bold,
@@ -120,7 +145,7 @@ class _ExersiceCalPageState extends State<ExersiceCalPage> {
             ),
           ),
           Expanded(
-            flex: 7,
+            flex: 11,
             child: Container(
               child: Column(
                 children: <Widget>[
@@ -139,7 +164,7 @@ class _ExersiceCalPageState extends State<ExersiceCalPage> {
                       ),
                       RaisedButton(
                         onPressed: resettispressed ? null : resetstopwatch,
-                        color: Colors.grey,
+                        color: Colors.pink,
                         padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                         child: Text('Reset',
                         style: TextStyle(

@@ -1,5 +1,6 @@
 import 'package:WadiFood/exercise.dart';
 import 'package:WadiFood/feed_page.dart';
+import 'package:WadiFood/healthconsultant.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'calorie_cal.dart';
@@ -53,7 +54,6 @@ class HomePage extends StatelessWidget {
             ),
             ListTile(
               title: Center(child: Text('Products')),
-              trailing: Icon(Icons.store_mall_directory),
             ),
             ListTile(
               title: Center(child: Text('Exercise Calculator')),
@@ -67,6 +67,13 @@ class HomePage extends StatelessWidget {
               onTap: (){
                 Navigator.of(context).pop();
                 Navigator.of(context).pushNamed(CalorieCalPage.id);
+              },
+            ),
+            ListTile(
+              title: Center(child: Text('Health Consultant')),
+              onTap: (){
+                Navigator.of(context).pop();
+                Navigator.of(context).pushNamed(HealthConsultant.id);
               },
             ),
           ],

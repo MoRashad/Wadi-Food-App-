@@ -170,7 +170,7 @@ void movetoresetpassword(){
             child: new Column(
               
               crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: showAlert() + buildInputs() + buildsubmitbutton(),
+              children: /*showAlert() +*/ buildInputs() + buildsubmitbutton(),
             ),
           ),
         ),
