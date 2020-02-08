@@ -143,9 +143,8 @@ _submit() async{
           IconButton(
             onPressed: (){
               _submit();
-              Navigator.pop(context);
             },
-            icon: Icon(Icons.add),
+            icon: Icon(Icons.send),
           ),
         ],
       ),
