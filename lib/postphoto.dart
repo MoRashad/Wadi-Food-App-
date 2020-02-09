@@ -126,6 +126,7 @@ _submit() async{
       _caption = '';
       _image = null;
       _isloading = false;
+      Navigator.pop(context);
     });
   }
 }

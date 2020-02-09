@@ -1,5 +1,6 @@
 import 'package:WadiFood/feed_page.dart';
 import 'package:WadiFood/healthconsultant.dart';
+import 'package:WadiFood/postquestion.dart';
 import 'package:provider/provider.dart';
 import 'calorie_cal.dart';
 import 'search_page.dart';
@@ -58,6 +59,7 @@ class MyApp extends StatelessWidget {
           CalorieCalPage.id : (context) => CalorieCalPage(userid: Provider.of<Userdata>(context).currentuserid,),
           SearchFood.id : (context) => SearchFood(userid: Provider.of<Userdata>(context).currentuserid,),
           HealthConsultant.id : (context) => HealthConsultant(userid: Provider.of<Userdata>(context).currentuserid,),
+          PostQuestion.id : (context) => PostQuestion(userid: Provider.of<Userdata>(context).currentuserid,),
   },
   ),
     );

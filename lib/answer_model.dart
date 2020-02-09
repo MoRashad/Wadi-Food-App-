@@ -1,24 +1,25 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Question{
+class Answer{
   final String id;
-  final String question;
+  final String content;
   final String authorid;
   final Timestamp timestamp;
 
-  Question({
+  Answer({
     this.id,
+    this.content,
     this.authorid,
-    this.question,
     this.timestamp,
   });
 
-  factory Question.fromDoc(DocumentSnapshot doc){
-    return Question(
+  factory Answer.fromDoc(DocumentSnapshot doc) {
+    return Answer(
       id: doc.documentID,
+      content: doc['content'],
       authorid: doc['authorid'],
-      question: doc['question'],
       timestamp: doc['timestamp'],
     );
   }
+  
 }

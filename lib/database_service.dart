@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'post_model.dart';
+import 'questions_models.dart';
 import 'user_model.dart';
 
 class DatabaseServise {
@@ -24,6 +25,14 @@ class DatabaseServise {
       'likecount': post.likecount,
       'authorid': post.authorid,
       'timestamp': post.timestamp,
+    });
+  }
+
+  static void postquestion(Question question) {
+    Firestore.instance.collection('questions').add({
+      'authorid': question.authorid,
+      'question': question.question,
+      'timestamp': question.timestamp,
     });
   }
 
@@ -129,6 +138,16 @@ class DatabaseServise {
     return posts;
   }
 
+  static Future<List<Question>> getallquestions() async {
+    QuerySnapshot questionsnapshot = await Firestore.instance
+        .collection('questions')
+        .orderBy('timestamp', descending: true)
+        .getDocuments();
+    List<Question> questions =
+        questionsnapshot.documents.map((doc) => Question.fromDoc(doc)).toList();
+    return questions;
+  }
+
   static Future<User> getuserwithid(String userid) async {
     DocumentSnapshot userdocsnapshot =
         await Firestore.instance.collection('users').document(userid).get();
@@ -196,9 +215,21 @@ class DatabaseServise {
         .document(postid)
         .collection('postcomments')
         .add({
-      'content': comment,
-      'authorid': currentuserid,
-      'timestamp': Timestamp.fromDate(DateTime.now()),
+          'content': comment,
+          'authorid': currentuserid,
+          'timestamp': Timestamp.fromDate(DateTime.now()),
     });
   }
+
+  static void answerquestion(
+      {String currentuserid, String questionid, String answer}) {
+        Firestore.instance.collection('answers')
+        .document(questionid)
+        .collection('postanswer')
+        .add({
+          'content': answer,
+          'authorid': currentuserid,
+          'timestamp': Timestamp.fromDate(DateTime.now()),
+        });
+      }
 }

@@ -101,7 +101,7 @@ class _PostViewState extends State<PostView> {
                   radius: 25,
                   backgroundColor: Colors.grey,
                   backgroundImage: widget.author.profileimage.isEmpty
-                  ? AssetImage('assets/images/user_placeholder')
+                  ? AssetImage('assets/images/user_placeholder.jpg')
                   : CachedNetworkImageProvider(widget.author.profileimage),
                 ),
                 SizedBox(width: 8,),
