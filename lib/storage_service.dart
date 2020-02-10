@@ -35,4 +35,12 @@ class StorageService{
     String downloadUrl = await storagesnap.ref.getDownloadURL();
     return downloadUrl;
   }
+  static Future<String> uploadofferphoto(File imagefile) async{
+    String photoId = Uuid().v4();
+    File image = await compressImage(photoId, imagefile);
+    StorageUploadTask uploadtask = FirebaseStorage.instance.ref().child('images/offer/offer_$photoId.jpg').putFile(image);
+    StorageTaskSnapshot storagesnap = await uploadtask.onComplete;
+    String downloadUrl = await storagesnap.ref.getDownloadURL();
+    return downloadUrl;
+  }
 }

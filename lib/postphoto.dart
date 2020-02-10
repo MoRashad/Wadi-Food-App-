@@ -187,7 +187,10 @@ _submit() async{
                   child: TextField(
                     controller: _captioncontroller,
                     style: TextStyle(fontSize: 18,),
-                    decoration: InputDecoration(labelText: 'Description'),
+                    decoration: InputDecoration(
+                      labelText: 'Description',
+                      
+                    ),
                     onChanged: (value) => _caption = value,
                   ),
                 ),

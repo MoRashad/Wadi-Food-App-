@@ -1,6 +1,7 @@
 import 'package:WadiFood/exercise.dart';
 import 'package:WadiFood/feed_page.dart';
 import 'package:WadiFood/healthconsultant.dart';
+import 'package:WadiFood/specialoffers_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'calorie_cal.dart';
@@ -74,6 +75,13 @@ class HomePage extends StatelessWidget {
               onTap: (){
                 Navigator.of(context).pop();
                 Navigator.of(context).pushNamed(HealthConsultant.id);
+              },
+            ),
+            ListTile(
+              title: Center(child: Text('Special Offers')),
+              onTap: (){
+                Navigator.of(context).pop();
+                Navigator.of(context).pushNamed(SpecialOffersPage.id);
               },
             ),
           ],

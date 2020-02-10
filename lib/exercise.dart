@@ -165,7 +165,7 @@ class _ExersiceCalPageState extends State<ExersiceCalPage> {
           //SizedBox(height: 40,),
           Container(
             child: Text(
-              'Calories Burnt',
+              'Calories Burned',
               style: TextStyle(
                 fontSize: 20,
               ),

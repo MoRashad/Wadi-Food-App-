@@ -1,3 +1,4 @@
+import 'package:WadiFood/offers_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'post_model.dart';
@@ -26,6 +27,16 @@ class DatabaseServise {
       'authorid': post.authorid,
       'timestamp': post.timestamp,
     });
+  }
+
+  static void createoffer(Offer offer){
+    Firestore.instance
+      .collection('offers')
+      .add({
+        'authorid': offer.authorid,
+        'description': offer.description,
+        'imageurl': offer.imageurl,
+      });
   }
 
   static void postquestion(Question question) {

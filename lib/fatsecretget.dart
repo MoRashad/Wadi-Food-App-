@@ -1,8 +1,6 @@
 import 'dart:convert';
-import 'dart:js';
 
 import 'package:crypto/crypto.dart';
-import 'package:oauth2/oauth2.dart' as oauth2;
 
 class Fatsecretget{
   final identifier = '712d445f5b5b422bae27ae637219595f';
