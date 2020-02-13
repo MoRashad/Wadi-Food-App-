@@ -5,12 +5,14 @@ class Offer{
   final String imageurl;
   final String description;
   final String authorid;
+  final Timestamp timestamp;
 
   Offer({
     this.id,
     this.authorid,
     this.description,
     this.imageurl,
+    this.timestamp
   });
 
   factory Offer.fromDoc(DocumentSnapshot doc){
@@ -19,6 +21,7 @@ class Offer{
       imageurl: doc['imageurl'],
       description: doc['description'],
       authorid: doc['authorid'],
+      timestamp: doc['timestamp'],
     );
   }
 }

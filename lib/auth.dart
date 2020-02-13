@@ -10,7 +10,6 @@ class AuthService {
   static final _auth = FirebaseAuth.instance;
   static final _firestore = Firestore.instance;
   static String error;
-
  
   static void signinwithemailandpassword(BuildContext context, String email, String password) async{
      try{
@@ -19,11 +18,10 @@ class AuthService {
       if(user != null){
         //Navigator.pushReplacementNamed(context, HomePage.id);
         print(user.uid);
-        
       }
      }catch(e){
        print(e.message);
-       //return e.message;
+       error = e.message;
        
      }
     

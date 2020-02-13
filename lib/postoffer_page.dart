@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:WadiFood/database_service.dart';
 import 'package:WadiFood/storage_service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -105,6 +106,7 @@ class _PostofferPageState extends State<PostofferPage> {
       imageurl: imageurl,
       description: _caption,
       authorid: widget.userid,
+      timestamp: Timestamp.fromDate(DateTime.now()),
     );
     DatabaseServise.createoffer(offer);
 

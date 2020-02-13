@@ -29,14 +29,13 @@ class DatabaseServise {
     });
   }
 
-  static void createoffer(Offer offer){
-    Firestore.instance
-      .collection('offers')
-      .add({
-        'authorid': offer.authorid,
-        'description': offer.description,
-        'imageurl': offer.imageurl,
-      });
+  static void createoffer(Offer offer) {
+    Firestore.instance.collection('offers').add({
+      'authorid': offer.authorid,
+      'description': offer.description,
+      'imageurl': offer.imageurl,
+      'timestamp': offer.timestamp,
+    });
   }
 
   static void postquestion(Question question) {
@@ -159,6 +158,16 @@ class DatabaseServise {
     return questions;
   }
 
+  static Future<List<Offer>> getalloffers() async {
+    QuerySnapshot offersnapshot = await Firestore.instance
+        .collection('offers')
+        .orderBy('timestamp', descending: true)
+        .getDocuments();
+    List<Offer> offers =
+        offersnapshot.documents.map((doc) => Offer.fromDoc(doc)).toList();
+    return offers;
+  }
+
   static Future<User> getuserwithid(String userid) async {
     DocumentSnapshot userdocsnapshot =
         await Firestore.instance.collection('users').document(userid).get();
@@ -226,21 +235,22 @@ class DatabaseServise {
         .document(postid)
         .collection('postcomments')
         .add({
-          'content': comment,
-          'authorid': currentuserid,
-          'timestamp': Timestamp.fromDate(DateTime.now()),
+      'content': comment,
+      'authorid': currentuserid,
+      'timestamp': Timestamp.fromDate(DateTime.now()),
     });
   }
 
   static void answerquestion(
       {String currentuserid, String questionid, String answer}) {
-        Firestore.instance.collection('answers')
+    Firestore.instance
+        .collection('answers')
         .document(questionid)
         .collection('postanswer')
         .add({
-          'content': answer,
-          'authorid': currentuserid,
-          'timestamp': Timestamp.fromDate(DateTime.now()),
-        });
-      }
+      'content': answer,
+      'authorid': currentuserid,
+      'timestamp': Timestamp.fromDate(DateTime.now()),
+    });
+  }
 }

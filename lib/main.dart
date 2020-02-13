@@ -3,6 +3,7 @@ import 'package:WadiFood/healthconsultant.dart';
 import 'package:WadiFood/postoffer_page.dart';
 import 'package:WadiFood/postquestion.dart';
 import 'package:WadiFood/specialoffers_page.dart';
+import 'package:easy_alert/easy_alert.dart';
 import 'package:provider/provider.dart';
 import 'calorie_cal.dart';
 import 'search_page.dart';
@@ -42,49 +43,54 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => Userdata(),
-      child: MaterialApp(
-        title: 'login',
-        debugShowCheckedModeBanner: false,
-        theme: new ThemeData(
-          primaryColor: Colors.white,
+      child: AlertProvider(
+          config: AlertConfig(
+        ok: "OK text for `ok` button in AlertDialog", 
+        cancel: "CANCEL text for `cancel` button in AlertDialog"),
+          child: MaterialApp(
+          title: 'login',
+          debugShowCheckedModeBanner: false,
+          theme: new ThemeData(
+            primaryColor: Colors.white,
+          ),
+          home: _getScreenId(),
+          routes: {
+            //LoginPage.id : (context)=> LoginPage(),
+            HomePage.id: (context) => HomePage(),
+            ProfilePage.id: (context) => ProfilePage(
+                currentuser: Provider.of<Userdata>(context).currentuserid,
+                userid: Provider.of<Userdata>(context).currentuserid),
+            EditProfile.id: (context) =>
+                EditProfile(userid: Provider.of<Userdata>(context).currentuserid),
+            ExersiceCalPage.id: (context) => ExersiceCalPage(
+                userid: Provider.of<Userdata>(context).currentuserid),
+            PostPhoto.id: (context) =>
+                PostPhoto(userid: Provider.of<Userdata>(context).currentuserid),
+            PostofferPage.id: (context) =>
+                PostofferPage(userid: Provider.of<Userdata>(context).currentuserid),
+            SearchPage.id: (context) => SearchPage(
+                  userid: Provider.of<Userdata>(context).currentuserid,
+                ),
+            FeedPage.id: (context) => FeedPage(
+                  currentuserid: Provider.of<Userdata>(context).currentuserid,
+                ),
+            CalorieCalPage.id: (context) => CalorieCalPage(
+                  userid: Provider.of<Userdata>(context).currentuserid,
+                ),
+            SearchFood.id: (context) => SearchFood(
+                  userid: Provider.of<Userdata>(context).currentuserid,
+                ),
+            HealthConsultant.id: (context) => HealthConsultant(
+                  userid: Provider.of<Userdata>(context).currentuserid,
+                ),
+            PostQuestion.id: (context) => PostQuestion(
+                  userid: Provider.of<Userdata>(context).currentuserid,
+                ),
+            SpecialOffersPage.id: (context) => SpecialOffersPage(
+                  userid: Provider.of<Userdata>(context).currentuserid,
+                ),
+          },
         ),
-        home: _getScreenId(),
-        routes: {
-          //LoginPage.id : (context)=> LoginPage(),
-          HomePage.id: (context) => HomePage(),
-          ProfilePage.id: (context) => ProfilePage(
-              currentuser: Provider.of<Userdata>(context).currentuserid,
-              userid: Provider.of<Userdata>(context).currentuserid),
-          EditProfile.id: (context) =>
-              EditProfile(userid: Provider.of<Userdata>(context).currentuserid),
-          ExersiceCalPage.id: (context) => ExersiceCalPage(
-              userid: Provider.of<Userdata>(context).currentuserid),
-          PostPhoto.id: (context) =>
-              PostPhoto(userid: Provider.of<Userdata>(context).currentuserid),
-          PostofferPage.id: (context) =>
-              PostofferPage(userid: Provider.of<Userdata>(context).currentuserid),
-          SearchPage.id: (context) => SearchPage(
-                userid: Provider.of<Userdata>(context).currentuserid,
-              ),
-          FeedPage.id: (context) => FeedPage(
-                currentuserid: Provider.of<Userdata>(context).currentuserid,
-              ),
-          CalorieCalPage.id: (context) => CalorieCalPage(
-                userid: Provider.of<Userdata>(context).currentuserid,
-              ),
-          SearchFood.id: (context) => SearchFood(
-                userid: Provider.of<Userdata>(context).currentuserid,
-              ),
-          HealthConsultant.id: (context) => HealthConsultant(
-                userid: Provider.of<Userdata>(context).currentuserid,
-              ),
-          PostQuestion.id: (context) => PostQuestion(
-                userid: Provider.of<Userdata>(context).currentuserid,
-              ),
-          SpecialOffersPage.id: (context) => SpecialOffersPage(
-                userid: Provider.of<Userdata>(context).currentuserid,
-              ),
-        },
       ),
     );
   }

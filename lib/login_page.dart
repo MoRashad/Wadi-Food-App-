@@ -38,6 +38,7 @@ class LoginPageState extends State<LoginPage>{
   FormType _formType = FormType.login;
   String smsCode;
   String verificationId;
+  static final _auth = FirebaseAuth.instance;
 
   /*Future<void> verifyPhone() async {
     final PhoneCodeAutoRetrievalTimeout autoRetrieve = (String verId) {
@@ -116,10 +117,6 @@ void validateandsubmit() async {
   if(validateandsave()){
     if(_formType == FormType.login){
       AuthService.signinwithemailandpassword( context,_email, _password);
-      if(AuthService.error != null){
-          print(AuthService.error);
-          //AuthService.error = null;
-        }
       
     }else if(_formType == FormType.register){
       AuthService.createuserwithemailandpassword(context, _email, _password, _name, phoneNo);
@@ -170,7 +167,7 @@ void movetoresetpassword(){
             child: new Column(
               
               crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: /*showAlert() +*/ buildInputs() + buildsubmitbutton(),
+              children: showAlert() + buildInputs() + buildsubmitbutton(),
             ),
           ),
         ),
@@ -179,7 +176,7 @@ void movetoresetpassword(){
   }
 
    List<Widget> showAlert(){
-    /*if(Provider.of<Userdata>(context).currentuserid == null){
+    if(error != null){
       return [Container(
         color: Colors.amberAccent,
         width: double.infinity,
@@ -188,7 +185,7 @@ void movetoresetpassword(){
           children: <Widget>[
             Icon(Icons.error_outline),
             Expanded(
-              child: AutoSizeText(AuthService.error, maxLines: 3, ),
+              child: AutoSizeText(error, maxLines: 3, ),
             ),
              Padding(
               padding: const EdgeInsets.only(left: 8.0),
@@ -196,7 +193,7 @@ void movetoresetpassword(){
                 icon: Icon(Icons.close),
                 onPressed: () {
                   setState(() {
-                    AuthService.error = null;
+                    error = null;
                   });
                 },
               ),
@@ -207,8 +204,7 @@ void movetoresetpassword(){
       SizedBox(height: 30,),
       ];
     }
-    AuthService.error = null;
-    return [SizedBox(height: 0,)];*/
+    return [SizedBox(height: 0,)];
   }
 
   List<Widget> buildInputs(){
