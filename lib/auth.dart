@@ -22,9 +22,7 @@ class AuthService {
      }catch(e){
        print(e.message);
        error = e.message;
-       
      }
-    
   }
 
   static void createuserwithemailandpassword(BuildContext context,String email, String password, String name, String phoneNo) async{

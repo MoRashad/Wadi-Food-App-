@@ -1,7 +1,14 @@
+import 'package:WadiFood/Awards.dart';
+import 'package:WadiFood/LifeStyle.dart';
+import 'package:WadiFood/Newsfeed.dart';
+import 'package:WadiFood/Products.dart';
+import 'package:WadiFood/aboutUs.dart';
 import 'package:WadiFood/feed_page.dart';
 import 'package:WadiFood/healthconsultant.dart';
+import 'package:WadiFood/markets.dart';
 import 'package:WadiFood/postoffer_page.dart';
 import 'package:WadiFood/postquestion.dart';
+import 'package:WadiFood/recipes.dart';
 import 'package:WadiFood/specialoffers_page.dart';
 import 'package:easy_alert/easy_alert.dart';
 import 'package:provider/provider.dart';
@@ -57,6 +64,13 @@ class MyApp extends StatelessWidget {
           routes: {
             //LoginPage.id : (context)=> LoginPage(),
             HomePage.id: (context) => HomePage(),
+            Products.id: (context) => Products(),
+            AboutUsPage.id: (context)=> AboutUsPage(),
+            AwardsPage.id: (context) => AwardsPage(),
+            MarketsPage.id: (context) => MarketsPage(),
+            RecipesPage.id: (context) => RecipesPage(),
+            NewsFeedPage.id: (context) => NewsFeedPage(),
+            LifeStylePage.id: (context) => LifeStylePage(),
             ProfilePage.id: (context) => ProfilePage(
                 currentuser: Provider.of<Userdata>(context).currentuserid,
                 userid: Provider.of<Userdata>(context).currentuserid),

@@ -38,6 +38,7 @@ class LoginPageState extends State<LoginPage>{
   FormType _formType = FormType.login;
   String smsCode;
   String verificationId;
+  static final _firestore = Firestore.instance;
   static final _auth = FirebaseAuth.instance;
 
   /*Future<void> verifyPhone() async {
@@ -115,15 +116,42 @@ class LoginPageState extends State<LoginPage>{
   }
 void validateandsubmit() async {
   if(validateandsave()){
+    try{
     if(_formType == FormType.login){
-      AuthService.signinwithemailandpassword( context,_email, _password);
+      //AuthService.signinwithemailandpassword( context,_email, _password);
+       AuthResult result = await _auth.signInWithEmailAndPassword(email: _email, password: _password);
+      FirebaseUser user = result.user;
+      if(user != null){
+        //Navigator.pushReplacementNamed(context, HomePage.id);
+        print(user.uid);
+      }
       
     }else if(_formType == FormType.register){
-      AuthService.createuserwithemailandpassword(context, _email, _password, _name, phoneNo);
+      //AuthService.createuserwithemailandpassword(context, _email, _password, _name, phoneNo);
+      AuthResult result = await _auth.createUserWithEmailAndPassword(email: _email, password: _password);
+    FirebaseUser user = result.user;
+      if(user != null){
+        _firestore.collection('/users').document(user.uid).setData({
+          'email' : _email,
+          'name': _name,
+          'phonenumber': phoneNo,
+          'profileimage': "",
+          'uid': user.uid
+        });
+      }
+      Provider.of<Userdata>(context).currentuserid = user.uid;
     }else if(_formType == FormType.reset){
-      AuthService.sendresetpassword(_email);
+      //AuthService.sendresetpassword(_email);
+      _auth.sendPasswordResetEmail(email: _email);
       setState(() {
         _formType = FormType.login;
+        error = 'Reset password mail has bee sent to $_email';
+      });
+    }
+    }catch(e){
+      print(e.message);
+      setState(() {
+        error = e.message;
       });
     }
     
