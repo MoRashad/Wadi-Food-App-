@@ -11,7 +11,6 @@ import 'package:provider/provider.dart';
 import 'Awards.dart';
 import 'LifeStyle.dart';
 import 'Newsfeed.dart';
-import 'calorie_cal.dart';
 import 'profile.dart';
 import 'auth.dart';
 import 'user_data.dart';
@@ -125,13 +124,6 @@ class _HomePageState extends State<HomePage> {
               onTap: (){
                 Navigator.of(context).pop();
                 Navigator.of(context).pushNamed(ExersiceCalPage.id);
-              },
-            ),
-            ListTile(
-              title: Center(child: Text('Calorie Calculator')),
-              onTap: (){
-                Navigator.of(context).pop();
-                Navigator.of(context).pushNamed(CalorieCalPage.id);
               },
             ),
             ListTile(
